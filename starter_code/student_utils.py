@@ -12,7 +12,22 @@ def reduce_dimension_ndc(df, ndc_df):
     return:
         df: pandas dataframe, output dataframe with joined generic drug name
     '''
-    return df
+    df_out = df.copy()
+
+    # Normalize keys to strings for a safe join
+    ndc_lookup = ndc_df.copy()
+    ndc_lookup['NDC_Code'] = ndc_lookup['NDC_Code'].astype(str).str.strip()
+    ndc_lookup['Non-proprietary Name'] = ndc_lookup['Non-proprietary Name'].astype(str).str.strip()
+
+    df_out['ndc_code'] = df_out['ndc_code'].astype(str).str.strip()
+
+    ndc_lookup = ndc_lookup[['NDC_Code', 'Non-proprietary Name']].drop_duplicates()
+    ndc_lookup = ndc_lookup.rename(columns={'NDC_Code': 'ndc_code', 'Non-proprietary Name': 'generic_drug_name'})
+
+    df_out = df_out.merge(ndc_lookup, on='ndc_code', how='left')
+    df_out['generic_drug_name'] = df_out['generic_drug_name'].fillna('unknown')
+
+    return df_out
 
 #Question 4
 def select_first_encounter(df):
