@@ -36,6 +36,8 @@ def select_first_encounter(df):
     return:
         - first_encounter_df: pandas dataframe, dataframe with only the first encounter for a given patient
     '''
+    first_encounter_df = df.sort_values('encounter_id').drop_duplicates(subset='patient_nbr', keep='first')
+    
     return first_encounter_df
 
 
