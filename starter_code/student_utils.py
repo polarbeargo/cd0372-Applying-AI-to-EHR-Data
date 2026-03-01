@@ -52,6 +52,21 @@ def patient_dataset_splitter(df, patient_key='patient_nbr'):
      - validation: pandas dataframe,
      - test: pandas dataframe,
     '''
+    unique_patients = df[patient_key].unique()
+    np.random.seed(42)
+    shuffled_patients = np.random.permutation(unique_patients)
+    total_patients = len(shuffled_patients)
+    train_size = int(0.6 * total_patients)
+    val_size = int(0.2 * total_patients)
+    
+    train_patients = shuffled_patients[:train_size]
+    val_patients = shuffled_patients[train_size:train_size + val_size]
+    test_patients = shuffled_patients[train_size + val_size:]
+    
+    train = df[df[patient_key].isin(train_patients)].reset_index(drop=True)
+    validation = df[df[patient_key].isin(val_patients)].reset_index(drop=True)
+    test = df[df[patient_key].isin(test_patients)].reset_index(drop=True)
+    
     return train, validation, test
 
 #Question 7
