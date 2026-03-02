@@ -118,6 +118,11 @@ def create_tf_numeric_feature(col, MEAN, STD, default_value=0):
     return:
         tf_numeric_feature: tf feature column representation of the input field
     '''
+    tf_numeric_feature = tf.feature_column.numeric_column(
+        key=col,
+        default_value=default_value,
+        normalizer_fn=lambda x: normalize_numeric_with_zscore(x, MEAN, STD)
+    )
     return tf_numeric_feature
 
 #Question 9
