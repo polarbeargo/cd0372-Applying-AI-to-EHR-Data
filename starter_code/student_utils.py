@@ -104,7 +104,13 @@ def normalize_numeric_with_zscore(col, mean, std):
     '''
     This function can be used in conjunction with the tf feature column for normalization
     '''
-    return (col - mean)/std
+    std = tf.cast(std, tf.float32)
+    safe_std = tf.where(
+        tf.math.logical_or(tf.equal(std, 0.0), tf.math.is_nan(std)),
+        tf.constant(1.0, dtype=tf.float32),
+        std
+    )
+    return (tf.cast(col, tf.float32) - tf.cast(mean, tf.float32)) / safe_std
 
 
 
