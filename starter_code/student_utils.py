@@ -136,8 +136,8 @@ def get_mean_std_from_preds(diabetes_yhat):
     '''
     diabetes_yhat: TF Probability prediction object
     '''
-    m = '?'
-    s = '?'
+    m = diabetes_yhat.loc
+    s = diabetes_yhat.scale
     return m, s
 
 # Question 10
@@ -148,4 +148,5 @@ def get_student_binary_prediction(df, col):
     return:
         student_binary_prediction: pandas dataframe converting input to flattened numpy array and binary labels
     '''
+    student_binary_prediction = (df[col] >= 5).astype(int).values
     return student_binary_prediction
