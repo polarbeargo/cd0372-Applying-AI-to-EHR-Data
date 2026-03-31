@@ -321,6 +321,57 @@ The workflow follows this chain of thoughts:
 To reproduce all visualizations and analysis outputs, run all cells in:
 - `starter_code/student_project.ipynb`
 
+## Future Improvements
+
+While the current project meets the requirements and demonstrates a complete end-to-end pipeline for patient selection, there are several promising directions for improving model performance, interpretability, and clinical usefulness.
+
+### Improve Recall for the Positive Class
+One of the most important next steps is improving recall for patients in the `>=5` day hospital stay class. Since this is a class imbalance and calibration challenge, the most direct approaches are:
+
+- **Class weighting**: apply a higher loss weight to the positive class to penalize missed positive cases more strongly.
+- **Threshold tuning**: lower the prediction threshold below the default cutoff to improve sensitivity, while monitoring the precision-recall tradeoff.
+
+These changes would make the model more useful in settings where identifying higher-risk patients is more important than maximizing precision alone.
+
+### Use Clinically Meaningful ICD Groupings
+Instead of relying on raw ICD diagnosis codes, a stronger feature engineering approach would be to map diagnoses into broader clinical groupings such as:
+
+- **Clinical Classification Software (CCS) categories**
+- **Charlson Comorbidity Index groupings**
+
+This would reduce feature dimensionality, lower sparsity, and inject medical domain knowledge into the model. It is likely one of the highest-impact improvements for representing patient condition more effectively.
+
+### Explore Cross-Feature Interactions
+Cross-feature columns may help capture non-linear interactions between variables that are not fully represented by standard dense feature layers. Examples include:
+
+- age × number of diagnoses
+- diagnosis category × number of medications
+
+This may improve predictive performance, though care would be needed to avoid overfitting.
+
+### Incorporate Richer Clinical Representations
+A more advanced extension would be to replace simple indicator-style representations with learned or pre-trained embeddings for diagnosis codes and medications. For example:
+
+- clinical code embeddings
+- pre-trained representations from larger healthcare corpora
+
+These approaches may better capture semantic relationships between conditions, treatments, and patient risk patterns.
+
+### Use Uncertainty for Clinical Triage
+TensorFlow Probability uncertainty estimates may not directly improve recall, but they can still provide practical value. Patients with both high predicted risk and high uncertainty could be flagged for additional review, making the model more useful as a triage support tool.
+
+### Implement Production-Oriented Data Validation
+For future deployment scenarios, TensorFlow Data Validation (TFDV) could be added to monitor:
+
+- schema consistency
+- feature distribution drift
+- train-serving skew
+
+While custom visualizations are more transparent for exploratory analysis in this project, TFDV would be valuable in a production ML pipeline.
+
+Overall, the most impactful next steps would likely be class weighting, threshold tuning, and clinically meaningful ICD grouping.
+
+
 
 ## License
 
